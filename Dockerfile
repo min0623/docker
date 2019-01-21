@@ -1,4 +1,33 @@
-FROM openjdk:8-jdk-stretch
+FROM ubuntu:16.04
+
+# install openjdk-8
+RUN apt-get update && \
+		apt-get install -y unzip && \
+		apt-get install -y wget && \
+		apt-get install -y vim && \
+		apt-get install -y openjdk-8-jdk
+
+# Add Gradle
+ADD https://services.gradle.org/distributions/gradle-5.1.1-all.zip /opt/
+RUN unzip /opt/gradle-5.1.1-all.zip -d /opt/gradle
+ENV GRADLE_HOME /opt/gradle/gradle-2.4-all
+ENV PATH $GRADLE_HOME/bin:$PATH
+
+# Android SDK Manager
+ADD https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip /opt/android-sdk/
+RUN unzip /opt/android-sdk/sdk-tools-linux-4333796.zip -d /opt/android-sdk
+ENV ANDROID_HOME /opt/android-sdk
+ENV PATH $ANDROID_HOME/platform-tools:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$PATH
+RUN chmod -R 755 $ANDROID_HOME
+
+ARG ANDROID_BUILD_TOOLS_VERSION=28.0.3
+ARG ANDROID_PLATFORM_VERSION=28
+ARG CMAKE_VERSION=3.10.2.4988404
+
+RUN echo y | sdkmanager --install "build-tools;${ANDROID_BUILD_TOOLS_VERSION}"
+RUN echo y | sdkmanager --install "platforms;android-${ANDROID_PLATFORM_VERSION}"
+RUN echo y | sdkmanager --install "ndk-bundle"
+RUN echo y | sdkmanager --install "cmake;${CMAKE_VERSION}"
 
 RUN apt-get update && apt-get install -y git curl && rm -rf /var/lib/apt/lists/*
 
