@@ -29,6 +29,19 @@ RUN echo y | sdkmanager --install "platforms;android-${ANDROID_PLATFORM_VERSION}
 RUN echo y | sdkmanager --install "ndk-bundle"
 RUN echo y | sdkmanager --install "cmake;${CMAKE_VERSION}"
 
+# install aws cli
+RUN apt-get install -y python3 && \
+		apt-get install -y python3-pip
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install awscli --upgrade
+
+# Add Phraseapp
+ADD https://github.com/phrase/phraseapp-client/releases/download/1.12.4/phraseapp_linux_amd64.tar.gz /usr/local/bin/
+RUN cd /usr/local/bin && tar -zxvf /usr/local/bin/phraseapp_linux_amd64.tar.gz 
+RUN mv /usr/local/bin/phraseapp_linux_amd64 /usr/local/bin/phraseapp
+RUN rm /usr/local/bin/phraseapp_linux_amd64.tar.gz
+RUN phraseapp info
+
 RUN apt-get update && apt-get install -y git curl && rm -rf /var/lib/apt/lists/*
 
 ARG user=jenkins
