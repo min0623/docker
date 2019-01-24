@@ -22,10 +22,12 @@ RUN chmod -R 755 $ANDROID_HOME
 
 ARG ANDROID_BUILD_TOOLS_VERSION=28.0.3
 ARG ANDROID_PLATFORM_VERSION=28
+ARG ANDROID_PLATFORM_VERSION_OPENCV=27
 ARG CMAKE_VERSION=3.10.2.4988404
 
 RUN echo y | sdkmanager --install "build-tools;${ANDROID_BUILD_TOOLS_VERSION}"
 RUN echo y | sdkmanager --install "platforms;android-${ANDROID_PLATFORM_VERSION}"
+RUN echo y | sdkmanager --install "platforms;android-${ANDROID_PLATFORM_VERSION_OPENCV}"
 RUN echo y | sdkmanager --install "ndk-bundle"
 RUN echo y | sdkmanager --install "cmake;${CMAKE_VERSION}"
 
